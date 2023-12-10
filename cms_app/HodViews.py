@@ -52,7 +52,23 @@ def admin_home(request):
     for staff in staffs:
         subject_ids=Subjects.objects.filter(staff_id=staff.admin.id)
         #fetching all attendance record of all subject ID which are in attendance table
-       
+        attendance=Attendance.objects.filter(subject_id__in=subject_ids).count()
+        leaves=LeaveReportStaff.objects.filter(staff_id=staff.id,leave_status=1).count()
+        attendance_present_list_staff.append(attendance)
+        attendance_absent_list_staff.append(leaves)
+        staff_name_list.append(staff.admin.username)
+
+    students_all=Students.objects.all()
+    attendance_present_list_student=[]
+    attendance_absent_list_student=[]
+    student_name_list=[]
+    for student in students_all:
+        attendance=AttendanceReport.objects.filter(student_id=student.id,status=True).count()
+        absent=AttendanceReport.objects.filter(student_id=student.id,status=False).count()
+        leaves=LeaveReportStudent.objects.filter(student_id=student.id,leave_status=1).count()
+        attendance_present_list_student.append(attendance)
+        attendance_absent_list_student.append(leaves+absent)
+        student_name_list.append(student.admin.username)
         #passing into the template
     return render(request,"hod_template/home_content.html",{"student_count":student_count1,"staff_count":staff_count,"subject_count":subject_count,"course_count":course_count,"course_name_list":course_name_list,"subject_count_list":subject_count_list,"student_count_list_in_course":student_count_list_in_course,"student_count_list_in_subject":student_count_list_in_subject,"subject_list":subject_list,"staff_name_list":staff_name_list,"attendance_present_list_staff":attendance_present_list_staff,"attendance_absent_list_staff":attendance_absent_list_staff,"student_name_list":student_name_list,"attendance_present_list_student":attendance_present_list_student,"attendance_absent_list_student":attendance_absent_list_student})
 

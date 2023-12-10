@@ -66,7 +66,47 @@ class Students(models.Model):
     fcm_token=models.TextField(default="")
     objects = models.Manager()
 
+#creating database model for Attendance data
+class Attendance(models.Model):
+    id=models.AutoField(primary_key=True)
+    subject_id=models.ForeignKey(Subjects,on_delete=models.DO_NOTHING)
+    attendance_date=models.DateField()
+    created_at=models.DateTimeField(auto_now_add=True)
+    session_year_id=models.ForeignKey(SessionYearModel,on_delete=models.CASCADE)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 
+#creating database model for AttendanceReport data.
+class AttendanceReport(models.Model):
+    id=models.AutoField(primary_key=True)
+    student_id=models.ForeignKey(Students,on_delete=models.DO_NOTHING)
+    attendance_id=models.ForeignKey(Attendance,on_delete=models.CASCADE)
+    status=models.BooleanField(default=False)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+#creating database model for LeavereportStudent data
+class LeaveReportStudent(models.Model):
+    id=models.AutoField(primary_key=True)
+    student_id=models.ForeignKey(Students,on_delete=models.CASCADE)
+    leave_date=models.CharField(max_length=255)
+    leave_message=models.TextField()
+    leave_status=models.IntegerField(default=0)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now_add=True)
+    objects=models.Manager()
+
+#creating database model for LeaveReportStaff data
+class LeaveReportStaff(models.Model):
+    id = models.AutoField(primary_key=True)
+    staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
+    leave_date = models.CharField(max_length=255)
+    leave_message = models.TextField()
+    leave_status = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 
 #creating database for student feedback data.
 class FeedBackStudent(models.Model):
@@ -89,7 +129,22 @@ class FeedBackStaffs(models.Model):
     objects = models.Manager()
 
 #creating database for manage notice of the student
+class NotificationStudent(models.Model):
+    id = models.AutoField(primary_key=True)
+    student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 
+#creating database for manage notice of the staff
+class NotificationStaffs(models.Model):
+    id = models.AutoField(primary_key=True)
+    staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    objects = models.Manager()
 #creating database to manage and store student result data
 class StudentResult(models.Model):
     id=models.AutoField(primary_key=True)
